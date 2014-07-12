@@ -123,7 +123,9 @@ Rails will generate files and folders
 ```
 An important file that was generated was the migration file:
 
-```db/migrate/20140712034707_create_posts.rb
+```console
+db/migrate/20140712034707_create_posts.rb
+```
 
 You've probably noticed that you have a different set of numbers in yours. This is because the name is corresponds to a timestamp (the time when the file was created).
 
@@ -148,7 +150,9 @@ your schema. You can see that this code is to create a table called ```Posts and
 
 Type:
 
-```rake db:migrate
+```console
+rake db:migrate
+```
 
 Once this command has run you can start up your Rails server again with rails server and then navigate to [http://localhost:3000/posts](http://localhost:3000/posts) to see the changes you've made to your application.
 
