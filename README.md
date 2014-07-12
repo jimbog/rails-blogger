@@ -509,9 +509,8 @@ git commit -m "add pg gem to get ready for deployment"
 
 Regarding version control
 ===
-Heroku also requires that every application is placed under version
-control before it is deployed. Simply run the following commands on the
-command prompt to make sure your application is properly controlled:
+Heroku also requires that every application is placed under version. We
+have already been saving our project with git so we're covered.
 
 Deploying your application
 ===
