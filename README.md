@@ -182,7 +182,7 @@ So our `post.rb` file will look like this:
 
 ```ruby
 class Post < ActiveRecord::Base
-  validate :title, :body, presence: true
+  validates :title, :body, presence: true
 end
 ``` 
 We don't need to validate for the picture field since sometimes there
