@@ -400,21 +400,6 @@ like:
 </div>
 ```
 
-You'll now need to create a file called `app/views/comments/_comment.html.erb` with the following contents:
-
-```erb
-<p id="notice"><%= notice %></p>
-             
-<%= render :partial => @post %>..
-
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
-
-<h2>Comments</h2>
-<div id="comments">
-  <%= render :partial => @post.comments %>
-</div>
-```
 
 You'll now need to create a file called `app/views/comments/_comment.html.erb` with the following contents:
 
