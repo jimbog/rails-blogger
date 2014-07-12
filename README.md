@@ -546,3 +546,30 @@ Or just type:
 ```console
 heroku open
 ```
+
+Setting the index/root page in Rails
+
+Currently our site only shows the posts if you navigate to /posts. This
+is all well and good, but if you go to the "root page" of the website at
+http://localhost:3000 you get the "Welcome to Rails" page.
+
+Obviously, if we want people to start reading our blog, it would be good
+if we show the blog posts we have immidiately when they come to our
+site, without having them navigate elsewhere.
+
+Now, open `config/routes.rb` and add root `:to => 'posts#index'` to tell rails the rails router to take our visitors directly to the list of all posts. So, that file so it looks like:
+
+```ruby
+Rails.application.routes.draw do
+  root to: 'posts#index'
+
+  resources :posts do
+    resources :comments
+  end 
+end
+```
+
+We're effectively telling rails that the route of our app goes to the
+'index' action of the 'posts' controller.
+
+
