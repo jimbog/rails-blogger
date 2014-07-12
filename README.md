@@ -494,7 +494,7 @@ group :production do
 end
 ```
 
-After this run the command  the following command from the terminal:
+After this, run the  the following command from the terminal:
 
 ```console
 bundle install --without=production
