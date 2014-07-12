@@ -762,3 +762,171 @@ git commit -m "comments can be submitted via ajax"
 And then you can deploy to Heroku with `git push heroku master`. You'll be
 able to navigate to your blog on Heroku now to see the changes you've made.
 
+Giving your blog some style
+===
+
+Up until this point we've really neglected the look and feel of your
+blog. It definitely feels a bit boring! We'll be making it look much
+nicer by using a UI library called Foundation. Foundation is similar to
+Twitter Bootstrap, but is slightly more compatible with Rails.
+Foundation is built using Sass while Bootstrap is built using Less. You
+can run Less in Rails, but it has some compatibility issues with Windows
+so we'll be using Foundation.
+
+We'll be installing Foundation using the zurb-foundation gem by adding
+it to our Gemfile. The Gemfile is a file that sits at the
+top level of your application directory structure and lists all of the
+dependencies and libraries that your code uses. Update your Gemfile by
+adding `gem 'zurb-foundation'` so it looks like:
+
+```ruby
+
+source 'https://rubygems.org'
+
+gem 'rails', '4.1.4'
+
+gem 'sass-rails', '~> 4.0.3'
+gem 'uglifier', '>= 1.3.0' 
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'jbuilder', '~> 2.0'
+gem 'sdoc', '~> 0.4.0',          group: :doc
+
+gem 'zurb-foundation'
+
+group :development, :test do
+  gem 'sqlite3'
+end
+
+group :production do
+  gem 'pg'
+end
+
+group :development do
+ gem 'spring' 
+ gem 'quiet_assets'
+end
+``` 
+
+After you've saved that file, switch to your terminal and run: bundle
+install `--without=production`. We're going to skip installing the
+postgres gem in our development environment since it's likely your
+computer isn't set up to build it properly. Make sure at this point you
+also restart your Rails server, so switch to the command prompt where
+Rails is running press `Ctrl-C` and then restart it by typing `rails
+server`.
+
+After you've done this you'll need to switch back to your other terminal
+and finish installing Foundation. Run the following command in the
+terminal:
+
+```console
+rails g foundation:install
+```
+This will prompt you with a message about overwriting a file, type 'Y'
+in order to allow the overwriting.
+
+We're going to start off with two very quick things with Foundation.
+We'll give our content some whitespace so it's easier to read, and we'll
+change all our buttons so that they have a bit more style. First open
+your layout file `app/views/layouts/application.html.erb` and update it to
+look like:
+
+```erb
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,
+initial-scale=1.0" />
+
+    <title><%= content_for?(:title) ? yield(:title) : "foundation-rails"
+%></title>
+
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "vendor/modernizr" %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+
+    <div id="main">
+      <%= yield %>
+    </div>
+    <%= javascript_include_tag "application" %>
+  </body>
+</html>
+```
+
+Then we'll create a file called app/assets/stylesheets/common.css.scss
+and put the following inside it:
+
+```css
+input[type="submit"] {
+  @include button;
+}
+
+div#main {
+  @include grid-row;
+}
+
+footer {
+  margin-top: 50px;
+  background-color: #000;
+  color: #eee;
+  text-align: center;
+  p {
+    line-height: 100px;
+  }
+}
+```
+
+Then we'll open app/assets/stylesheets/application.css and delete the
+line with `*= require_tree`
+
+Finally we'll open
+`app/assets/stylesheets/foundation_and_overrides.css.scss` and
+remove all the comments and content of the file, and add the following two lines.
+So, it should look like:
+
+```sass
+@import 'foundation';
+@import 'common';
+```
+These steps definitely need explaining. First in our layout file you
+wrapped the yield statement inside a div. Then we're creating a new SCSS
+file that does 3 things:
+
+* Changes all inputs with a type of submit to use Foundation's button
+styling.
+* Targets that div#main you inserted into the layout file and gives it
+Foundation's grid-row behaviour.
+* Sets up some footer styling that we'll be using in a later step.
+
+
+After this you removed the requiretree directive from the
+application.css file. This directive causes your application to stop
+automatically including every CSS file in the stylesheets folder.
+Immediately after this we import the new common.css.scss file into the
+foundationand_overrides file so that our newly created CSS rules will be
+applied to our blog. We're doing this to inform Rails' asset pipeline
+that we'd like to use SASS to import the file, rather than relying on
+the asset pipeline's catch-all method. This gives us slightly more
+control over what gets included and also causes Foundation's mixins to
+work correctly. You can read more about the asset pipeline on the Rails
+guide site.
+
+Deploying your changes
+---
+
+At this point you can commit all your changes using git by typing:
+
+```console
+git add .
+git rm app/assets/stylesheets/scaffolds.css.scss
+git commit -m "adding zurb foundation"
+```
+
+And then you can deploy to Heroku with `git push heroku master`. You'll be
+able to navigate to your blog on Heroku now to see the changes you've
+made.
