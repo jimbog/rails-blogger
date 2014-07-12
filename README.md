@@ -622,7 +622,7 @@ group :development do
 end
 ```
 
-This adds this gem to our development group. Now type `bundle install` in your terminal  and restart your `rails server`.
+This adds this gem to our development group. Now type `bundle install --without production` in your terminal  and restart your `rails server`.
 
 #### quiet_assets gem
 You can read more about this gem at https://github.com/evrone/quiet_assets 
@@ -650,3 +650,105 @@ Let's add and commit our changes:
 git add -A
 git commit -m "add gem file for cleaner server logs"
 ```
+
+AJAX commenting with [unobtrusive JavaScript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html#unobtrusive-javascript)
+===
+
+The blogging engine we've got so far works great, but it definitely doesn't
+feel like a smooth, modern web-app. Luckily with Rails it's easy to add
+in simple JavaScript! Just like all the other helpers that Rails
+provides if this isn't powerful enough for your needs you can always add
+as much custom JavaScript into app/assets/javascripts/ as you like.
+
+What you'll be doing is adding in some functionality to the commenting
+system so that posting a comment doesn't require a page reload. This
+means we'll be submitting our comments using [AJAX](http://en.wikipedia.org/wiki/Ajax_(programming)) and then rendering the
+comments onto the post page using JavaScript. First we'll tackle posting
+the form using AJAX.
+
+Making the form submit via AJAX
+---
+
+Open `app/views/posts/show.html.erb` and add a `remote: true` option to
+the `form_for` method call. Your show view should look like:
+
+```erb
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => @post %>..
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+
+<h2>Comments</h2> 
+<div id="comments">
+  <%= render :partial => @post.comments %>
+</div>
+
+<%= form_for [@post, Comment.new], remote: true do |f| %>
+  <p>
+    <%= f.label :body, "New comment" %><br/>
+    <%= f.text_area :body %>
+  </p>
+  <p><%= f.submit "Add comment" %></p>
+<% end %>
+
+```
+
+
+Adding the remote flag to that method call means that Rails will automatically set up that form to be submitted via AJAX.
+
+If you refresh the post view page and try to submit a comment you'll notice that nothing happens, however if you switch to the terminal running your Rails server you'll be able to see that the request was received by the server, it's just doing the wrong thing with that request.
+
+Setting up the server to process AJAX requests
+---
+
+Let's fix that by making our create comment action aware of JavaScript
+AJAX requests. Open app/controllers/comments_controller.rb and change
+the create method to respond to AJAX requests as follows:
+
+```ruby
+  def create
+    @post = Post.find(params[:post_id])
+    @comment = @post.comments.create!(comment_params)
+    respond_to do |format|
+      format.html { redirect_to @post }
+      format.js
+    end
+  end
+```
+
+What this means is that your app will respond to regular HTML requests
+in the same way as before (by redirecting to the url of the post) but
+will render a view when receiving a JS request.
+
+The javascript view doesn't exist
+yet so you'll need to create it now. Create a new file
+`app/views/comments/create.js.erb`. This is a JS file that will be
+returned to the browser and executed. We want it to do 2 things: Insert
+the comment html into the document, and clear the comment form. Your
+`create.js.erb` file should look like:
+
+```javascript
+$('#comments').append('<%= escape_javascript(render partial: @comment)%>');
+$('#comment_body').val('');
+```
+
+Now when you submit a comment, you'll see the comment appear immediately
+in the section above the form and the comment field will be cleared. One
+cool thing about the approach you've learned here is that everything
+will continue to work even if a browser has JavaScript disabled.
+
+Deploying your changes
+---
+
+At this point you can commit all your changes using git by typing:
+
+```console
+git add .
+git commit -m "comments can be submitted via ajax"
+```
+
+And then you can deploy to Heroku with `git push heroku master`. You'll be
+able to navigate to your blog on Heroku now to see the changes you've made.
+
