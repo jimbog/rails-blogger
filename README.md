@@ -923,7 +923,6 @@ At this point you can commit all your changes using git by typing:
 
 ```console
 git add .
-git rm app/assets/stylesheets/scaffolds.css.scss
 git commit -m "adding zurb foundation"
 ```
 
