@@ -244,7 +244,7 @@ In our `show.html.erb` file we want insert the code to put our partial into our 
 ```erb
  <%= render :partial => @post %> 
 ```
-In order to make it obtain:
+In order to obtain:
 
 ```erb
 <p id="notice"><%= notice %></p>
@@ -272,7 +272,6 @@ the partial again so we're re-using that code:
 
 ```console
 git add -A
-git commit -m "make our posts show and index view niftier by using
-partials"
+git commit -m "make our posts show and index view niftier by using partials"
 ```
 
