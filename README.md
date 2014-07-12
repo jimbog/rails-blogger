@@ -572,4 +572,81 @@ end
 We're effectively telling rails that the route of our app goes to the
 'index' action of the 'posts' controller.
 
+### Saving and deploying your changes
+At this point you can commit all your changes and git by typing.
 
+```console
+git add -A
+git commit -m "set root to the list of posts"
+```
+
+And then you can deploy to Heroku with `git push heroku master`. Give it a few minutes and you'll be able to navigate to your blog on Heroku now to see the changes you've made.
+
+Getting read of the noise
+===
+
+If you take a look at the terminal window from where you launched the
+rails server, you'll notice something that looks like this (there is
+actually a lot more noise but, it's been abbreviated to not take too
+much space on this tutorial):
+
+```console
+Started GET "/" for 127.0.0.1 at 2014-07-12 10:16:53 -0500
+Processing by PostsController#index as HTML
+  Post Load (0.2ms)  SELECT "posts".* FROM "posts"
+  Rendered posts/_post.html.erb (0.8ms)
+  Rendered posts/index.html.erb within layouts/application (1.9ms)
+Completed 200 OK in 8ms (Views: 6.8ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/assets/comments.css?body=1" for 127.0.0.1 at 2014-07-12
+10:16:53 -0500
+
+
+Started GET "/assets/posts.css?body=1" for 127.0.0.1 at 2014-07-12
+10:16:53 -0500
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at 2014-07-12
+10:16:53 -0500
+
+...
+```
+
+To get rid of so much noise let's install the 'quiet_rails' gem. So,
+add the following lines to your `Gemfile`:
+
+```ruby
+group :development do
+  gem 'quiet_assets'
+end
+```
+
+This adds this gem to our development group. Now type `bundle install` in your terminal  and restart your `rails server`.
+
+#### quiet_assets gem
+You can read more about this gem at https://github.com/evrone/quiet_assets 
+
+#### stopping the server
+Remember that to stop your server you type `Ctrl-c`.
+
+Now your server logs we'll look cleaner, something like this:
+
+```console
+Started GET "/" for 127.0.0.1 at 2014-07-12 10:27:10 -0500
+  ActiveRecord::SchemaMigration Load (0.1ms)  SELECT
+"schema_migrations".* FROM "schema_migrations"
+Processing by PostsController#index as HTML
+  Post Load (0.2ms)  SELECT "posts".* FROM "posts"
+  Rendered posts/_post.html.erb (3.9ms)
+  Rendered posts/index.html.erb within layouts/application (12.4ms)
+Completed 200 OK in 60ms (Views: 45.7ms | ActiveRecord: 0.5ms)
+...
+```
+
+Let's add and commit our changes:
+
+```console
+git add -A
+git commit -m "add gem file for cleaner server logs"
+```

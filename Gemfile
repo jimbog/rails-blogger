@@ -18,3 +18,7 @@ end
 group :production do
   gem 'pg'
 end
+
+group :development do
+  gem 'quiet_assets'
+end
