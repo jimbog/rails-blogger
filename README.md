@@ -146,7 +146,7 @@ end
 ```
 
 This file is some Ruby code that is a database agnostic way to manage
-your schema. You can see that this code is to create a table called ```Posts and to create two columns in this table, a title column, a picture column and a body column. Finally we need to instruct Rails to apply this to our database.
+your schema. You can see that this code is to create a table called `Posts` and to create two columns in this table, a title column, a picture column and a body column. Finally we need to instruct Rails to apply this to our database.
 
 Type:
 
@@ -164,4 +164,37 @@ Let's add the changes we've introduced so far to our git repository
 ```console
 git add -A
 git commit -m "add scaffold of Posts and executed the first migration"
+```
+
+You'll notice you can create new posts, edit or delete them. However,
+you can also create 'empty' posts. In order to make sure that our posts
+have not empty titles and bodies. We're going to add in some functionality to our new Rails app which enforces a rule that every post must have a title and body. Open `app/models/post.rb` and add the line:
+
+```ruby
+validates :title, :body, presence: true
+```
+
+Validations are used to ensure that only valid data is saved into your
+database. You can read more about validations here [active record
+validations](http://guides.rubyonrails.org/active_record_validations.html)
+
+So our `post.rb` file will look like this:
+
+```ruby
+class Post < ActiveRecord::Base
+  validate :title, :body, presence: true
+end
+``` 
+We don't need to validate for the picture field since sometimes there
+may be a post without a picture.
+
+We can check that this works by editing our blog post, deleting the title and clicking Update Post. You'll get an error informing you that you've just attempted to break the rule you just inserted.
+
+Now is a good moment to save our work with git againNow is a good moment
+to save our work with git again.
+
+  
+```console
+git add -A
+git commit -m "add validations to our post model"
 ```
