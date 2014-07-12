@@ -582,7 +582,7 @@ git commit -m "set root to the list of posts"
 
 And then you can deploy to Heroku with `git push heroku master`. Give it a few minutes and you'll be able to navigate to your blog on Heroku now to see the changes you've made.
 
-Getting read of the noise
+Getting rid of the noise
 ===
 
 If you take a look at the terminal window from where you launched the
@@ -722,12 +722,22 @@ What this means is that your app will respond to regular HTML requests
 in the same way as before (by redirecting to the url of the post) but
 will render a view when receiving a JS request.
 
+Creating a js view
+---
 The javascript view doesn't exist
 yet so you'll need to create it now. Create a new file
 `app/views/comments/create.js.erb`. This is a JS file that will be
 returned to the browser and executed. We want it to do 2 things: Insert
-the comment html into the document, and clear the comment form. Your
-`create.js.erb` file should look like:
+the comment html into the document, and clear the comment form.
+
+### Why the name 'create.js.erb'
+
+If you're wondering why we called it 'create.js.erb' instead of
+'format.js', the reason is that Rails uses naming conventions to
+retrieve views from inside your controller. So Rails will look for a
+file with the same name of the calling 'action' (ruby method) in this
+case 'create'. In this case the 'respond_to' part  is the responsible to retrieve those views.
+Your `create.js.erb` file should look like:
 
 ```javascript
 $('#comments').append('<%= escape_javascript(render partial: @comment)%>');
