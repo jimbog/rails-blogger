@@ -454,7 +454,7 @@ About databases
 ===
 Up until this point we've been using SQLite as our database, but
 unfortunately Heroku doesn't support the use of SQLite. So we're going to be running Postgres instead.
-Setting this up is easy you'll need to open the Gemfile and make your Gemfile look like:
+Setting this up is easy you'll need to open the Gemfile and add the `gem 'pg'` and the `gem 'rails_12factor'` make your Gemfile look like:
 
 ```ruby
 source 'https://rubygems.org'
@@ -476,6 +476,7 @@ end
 
 group :production do
   gem 'pg'
+  gem 'rails_12factor'
 end
 ```
 
@@ -762,7 +763,7 @@ We'll be installing Foundation using the zurb-foundation gem by adding
 it to our Gemfile. The Gemfile is a file that sits at the
 top level of your application directory structure and lists all of the
 dependencies and libraries that your code uses. Update your Gemfile by
-adding `gem 'zurb-foundation'` so it looks like:
+adding `gem 'foundation-rails'` so it looks like:
 
 ```ruby
 
@@ -785,6 +786,7 @@ end
 
 group :production do
   gem 'pg'
+  gem 'rails_12factor'
 end
 
 group :development do
@@ -810,6 +812,14 @@ rails g foundation:install
 ```
 This will prompt you with a message about overwriting a file, type 'Y'
 in order to allow the overwriting.
+
+We also need to setup a few things in order to make foundation work on heroku. So open the `config/application.rb`
+
+and add the following line inside the  `class Application < Rails::Application`:
+
+```ruby
+config.assets.precompile += %w( vendor/modernizr )
+```
 
 We're going to start off with two very quick things with Foundation.
 We'll give our content some whitespace so it's easier to read, and we'll
@@ -907,7 +917,8 @@ Deploying your changes
 At this point you can commit all your changes using git by typing:
 
 ```console
-git add .
+rake assets:precompile
+git add -A
 git commit -m "adding zurb foundation"
 ```
 
