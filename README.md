@@ -198,3 +198,81 @@ to save our work with git again.
 git add -A
 git commit -m "add validations to our post model"
 ```
+
+Making things prettier
+==
+
+Right now our show post page isn't looking very good. We'll open `app/views/posts/show.html.erb` and make it look like the following:
+
+```erb
+<p id="notice"><%= notice %></p>
+
+<h2><%= link_to_unless_current @post.title, @post %></h2>
+<%= simple_format @post.body %>
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+```
+
+At this point you can refresh the show post page in your browser to see
+the changes you've made.
+
+We'll also want to make our blog listing prettier too, we'll use a Rails
+partial (a partial is simply a reusuable block of HTML code. It's part
+of a web page) to achieve this. We want our listing and the individual
+blog pages to look the same so first we'll create a file: 
+```console
+app/views/posts/_post.html.erb
+```
+Notice the underscore in front of the filename. This tells Rails that this file is a partial. We'll take:
+
+```erb
+ <h2><%= link_to_unless_current @post.title, @post %></h2>
+ <%= simple_format @post.body %>
+```
+
+Out of `app/views/posts/show.html.erb` and put it in our
+`_post.html.erb` file. After that change all the `@post` to be `post` instead. This means
+your `_post.html.erb` file will be:
+
+```erb
+ <h2><%= link_to_unless_current post.title, post %></h2>
+ <%= simple_format post.body %>
+```
+In our `show.html.erb` file we want insert the code to put our partial into our show view. Insert the code:
+
+```erb
+ <%= render :partial => @post %> 
+```
+In order to make it obtain:
+
+```erb
+<p id="notice"><%= notice %></p>
+
+<%= render :partial => @post %>..
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+```
+
+Save all these files and refresh the show posts page. This is to check
+that you haven't broken anything with those changes.
+
+Our index page still hasn't changed though so we're going to open the
+index.html.erb file up and remove the table in there and replace it with
+the partial again so we're re-using that code:
+
+```erb
+<h1>Listing posts</h1>
+
+<%= render :partial => @posts %>
+
+<%= link_to 'New Post', new_post_path %>
+```
+
+```console
+git add -A
+git commit -m "make our posts show and index view niftier by using
+partials"
+```
+
