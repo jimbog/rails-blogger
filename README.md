@@ -925,3 +925,79 @@ git commit -m "adding zurb foundation"
 And then you can deploy to Heroku with `git push heroku master`. You'll be
 able to navigate to your blog on Heroku now to see the changes you've
 made.
+
+Adding Authentication
+===
+## Getting started
+
+Add it to your
+Gemfile with:
+
+```ruby
+gem 'devise'
+```
+
+Run the bundle command to install it.
+```console
+bundle install
+```
+
+After you install Devise and add it to your Gemfile, you need to run the
+generator:
+
+```console
+rails generate devise:install
+```
+
+The generator will install an initializer which describes ALL Devise's
+configuration options and you MUST take a look at it. When you are
+done, you are ready to add Devise to any of your models using the
+generator:
+
+```console
+rails generate devise User
+```
+
+This will create a model User and and migration to create the table,
+so you must execture the migration by running:
+
+`rake db:migrate`
+
+Next, you need to set up the default URL options for the Devise
+mailer in each environment. Here is a configuration for
+`config/environments/development.rb`:
+
+```ruby
+config.action_mailer.default_url_options = { host:
+'localhost', port: 3000 }
+```
+
+You should restart your application after changing Devise's
+configuration options. Otherwise you'll run into strange errors
+like users being unable to login and route helpers being undefined.
+
+### Controller filters and helpers
+
+Devise will create some helpers to use inside your
+controllers and views. To set up a controller with user
+authentication, just add this before_action (assuming your devise
+model is 'User'):
+
+```ruby
+before_action :authenticate_user!
+```
+
+If your devise model is something other than User, replace "_user"
+with "_yourmodel". The same logic applies to the instructions below.
+
+To verify if a user is signed in, use the following helper:
+
+```ruby
+user_signed_in?
+```
+
+For the current signed-in user, this helper is available:
+
+```ruby
+current_user
+```
